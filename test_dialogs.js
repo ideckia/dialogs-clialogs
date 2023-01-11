@@ -1,4 +1,3 @@
-const { info } = require('console');
 const dialogReq = require('.');
 
 const dialog = new dialogReq.Dialog();

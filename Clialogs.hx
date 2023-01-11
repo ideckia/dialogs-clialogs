@@ -30,12 +30,7 @@ class Clialogs implements IDialog {
 				'clialogs';
 		}
 
-		#if debug
-		var lib = 'C:\\josu\\git\\ideckia\\clialogs\\target\\debug';
-		executablePath = haxe.io.Path.join([lib, filename]);
-		#else
 		executablePath = haxe.io.Path.join([js.Node.__dirname, 'lib', filename]);
-		#end
 		checkInstalation();
 		setDefaultOptions({
 			height: 200,
