@@ -230,7 +230,7 @@ class Clialogs implements IDialog {
 
 	function runClialogs(args:Array<String>, ?options:WindowOptions):js.lib.Promise<Option<ClialogResponse>> {
 		return new Promise<Option<ClialogResponse>>((resolve, reject) -> {
-			var cp = js.node.ChildProcess.spawn(executablePath, args.concat(buildWindowOptionArgs(options)), {shell: true});
+			var cp = js.node.ChildProcess.spawn(executablePath, buildWindowOptionArgs(options).concat(args), {shell: true});
 
 			var data = '';
 			var error = '';
