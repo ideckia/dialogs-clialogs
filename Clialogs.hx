@@ -41,7 +41,9 @@ class Clialogs implements IDialog {
 		});
 	}
 
-	public function setDefaultOptions(options:WindowOptions) {}
+	public function setDefaultOptions(options:WindowOptions) {
+		defaultOptions = options;
+	}
 
 	public function notify(title:String, text:String, ?options:WindowOptions) {
 		runClialogs(['notification', '--title "$title"', '--text "$text"'], options);
@@ -210,7 +212,7 @@ class Clialogs implements IDialog {
 	}
 
 	function buildWindowOptionArgs(?options:WindowOptions) {
-		return [].concat(writeArgument(options, 'icon', 'windowIcon'));
+		return [].concat(writeArgument(options, 'icon-path', 'windowIcon'));
 	}
 
 	function writeArgument(options:WindowOptions, argumentName:String, fieldName:String) {
@@ -228,7 +230,7 @@ class Clialogs implements IDialog {
 
 	function runClialogs(args:Array<String>, ?options:WindowOptions):js.lib.Promise<Option<ClialogResponse>> {
 		return new Promise<Option<ClialogResponse>>((resolve, reject) -> {
-			var cp = js.node.ChildProcess.spawn(executablePath, args.concat(buildWindowOptionArgs(options)), {shell: true});
+			var cp = js.node.ChildProcess.spawn(executablePath, buildWindowOptionArgs(options).concat(args), {shell: true});
 
 			var data = '';
 			var error = '';
