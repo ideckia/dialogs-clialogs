@@ -1,6 +1,5 @@
 import api.dialog.DialogTypes.IdValue;
 import api.dialog.DialogTypes.WindowOptions;
-import api.IdeckiaApi.Promise;
 import api.dialog.DialogTypes.FileFilter;
 import api.dialog.DialogTypes.Color;
 import api.dialog.IDialog;
@@ -17,7 +16,7 @@ class Clialogs implements IDialog {
 	public function new() {
 		var exceptionMessage = 'To use dialogs you must download "clialogs" and put it in the lib folder. You can get it here: https://github.com/ideckia/clialogs';
 		function checkInstalation() {
-			trace('Checking clialogs is installed.');
+			Sys.println('Checking clialogs is installed.');
 			var status = Sys.command(executablePath, ['--version']);
 			if (status != 0)
 				throw new haxe.Exception(exceptionMessage);
