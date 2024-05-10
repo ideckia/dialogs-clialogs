@@ -72,12 +72,14 @@ class Clialogs implements IDialog {
 		});
 	}
 
-	public function selectFile(title:String, isDirectory:Bool = false, multiple:Bool = false, ?fileFilter:FileFilter,
+	public function selectFile(title:String, isDirectory:Bool = false, ?openDirectory:String, multiple:Bool = false, ?fileFilter:FileFilter,
 			?options:WindowOptions):Promise<Option<Array<String>>> {
 		return new Promise<Option<Array<String>>>((resolve, reject) -> {
 			var args = ['file-dialog'];
 			if (isDirectory)
-				args.push('--directory');
+				args.push('--is-directory');
+			if (openDirectory != null)
+				args.push('--open-directory "$openDirectory"');
 			if (multiple)
 				args.push('--multiple');
 			runClialogs(args, options).then(optResponse -> {
@@ -91,9 +93,12 @@ class Clialogs implements IDialog {
 		});
 	}
 
-	public function saveFile(title:String, ?saveName:String, ?fileFilter:FileFilter, ?options:WindowOptions):Promise<Option<String>> {
+	public function saveFile(title:String, ?saveName:String, ?openDirectory:String, ?fileFilter:FileFilter, ?options:WindowOptions):Promise<Option<String>> {
 		return new Promise<Option<String>>((resolve, reject) -> {
-			runClialogs(['file-dialog', '--save'], options).then(optResponse -> {
+			var args = ['file-dialog', '--save'];
+			if (openDirectory != null)
+				args.push('--open-directory "$openDirectory"');
+			runClialogs(args, options).then(optResponse -> {
 				switch optResponse {
 					case Some(response) if (response.type == ok):
 						resolve(Some(response.body[0].value));
@@ -118,12 +123,12 @@ class Clialogs implements IDialog {
 		});
 	}
 
-	public function password(title:String, text:String, showUsername:Bool = false,
-			?options:WindowOptions):Promise<Option<{username:String, password:String}>> {
+	public function password(title:String, text:String, showUsername:Bool = false, ?options:WindowOptions):Promise<Option<{username:String, password:String}>> {
 		return new Promise<Option<{username:String, password:String}>>((resolve, reject) -> {
 			runClialogs([
 				'log-in',
 				'--title "$title"',
+				'--label "$text"',
 				'--user-label "username"',
 				'--pass-label "password"'
 			], options).then(optResponse -> {
