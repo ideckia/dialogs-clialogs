@@ -39,7 +39,7 @@ const progress = () => {
     }, 500);
 }
 
-const password = () => dialog.password('sartu pasahitza', 'izena eta pasahitza', true).then(resp => {
+const password = () => dialog.password('sartu pasahitza', 'izena eta pasahitza', true, 'username', 'password').then(resp => {
     if (resp.v != undefined)
         console.log('password.response: ' + resp.v.username + '/' + resp.v.password);
     color();
@@ -63,7 +63,7 @@ const list = () => dialog.list('aukeratu eguna', 'testua', 'goiburua', ['bat', '
     custom();
 });
 
-const custom = () => dialog.custom('C:/josu/git/ideckia/clialogs/custom_dialog.json').then(resp => {
+const custom = () => dialog.custom(__dirname + '/custom_dialog.json').then(resp => {
     if (resp.v != undefined)
         resp.v.forEach(e => {
             console.log('value ->' + e.id + '=' + e.value);
@@ -71,5 +71,4 @@ const custom = () => dialog.custom('C:/josu/git/ideckia/clialogs/custom_dialog.j
     dialog.notify('Test', 'akabo proba');
 }).catch(e => console.log("ERROREA: " + e));
 
-// dialog.info('title', 'info');
-question();
+dialog.info('title', 'info');

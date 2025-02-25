@@ -15,7 +15,7 @@ class Clialogs implements IDialog {
 
 	public function new() {
 		var exceptionMessage = 'To use dialogs you must download "clialogs" and put it in the lib folder. You can get it here: https://github.com/ideckia/clialogs';
-		function checkInstalation() {
+		function checkInstallation() {
 			Sys.println('Checking clialogs is installed.');
 			var status = Sys.command(executablePath, ['--version']);
 			if (status != 0)
@@ -30,7 +30,7 @@ class Clialogs implements IDialog {
 		}
 
 		executablePath = haxe.io.Path.join([js.Node.__dirname, 'lib', filename]);
-		checkInstalation();
+		checkInstallation();
 		setDefaultOptions({
 			height: 200,
 			width: 300,
@@ -123,14 +123,18 @@ class Clialogs implements IDialog {
 		});
 	}
 
-	public function password(title:String, text:String, showUsername:Bool = false, ?options:WindowOptions):Promise<Option<{username:String, password:String}>> {
+	public function password(title:String, text:String, showUsername:Bool = false, userLabel:String = "username", passwordLabel:String = "password",
+			?options:WindowOptions):Promise<Option<{
+			username:String,
+			password:String
+		}>> {
 		return new Promise<Option<{username:String, password:String}>>((resolve, reject) -> {
 			runClialogs([
 				'log-in',
 				'--title "$title"',
 				'--label "$text"',
-				'--user-label "username"',
-				'--pass-label "password"'
+				'--user-label "$userLabel"',
+				'--pass-label "$passwordLabel"'
 			], options).then(optResponse -> {
 				switch optResponse {
 					case Some(response) if (response.type == ok):
@@ -146,16 +150,16 @@ class Clialogs implements IDialog {
 				}
 			}).catchError(reject);
 		});
-	}
+		}
 
 	public function progress(title:String, text:String, autoClose:Bool = true, ?options:WindowOptions):Progress {
 		var args = ['progress', '--title "$title"', '--label "$text"'];
 		return new ClialogsProgress(args.concat(buildWindowOptionArgs(options)));
 	}
 
-	public function color(title:String, initialColor:String = "#FFFFFF", ?options:WindowOptions):js.lib.Promise<Option<Color>> {
+	public function color(title:String, label:String = "Select color", initialColor:String = "#FFFFFF", ?options:WindowOptions):js.lib.Promise<Option<Color>> {
 		return new Promise<Option<Color>>((resolve, reject) -> {
-			runClialogs(['color', '--title "$title"', '--label "Select color"'], options).then(optResponse -> {
+			runClialogs(['color', '--title "$title"', '--label "$label"'], options).then(optResponse -> {
 				switch optResponse {
 					case Some(response) if (response.type == ok):
 						var rgb:Array<UInt> = haxe.Json.parse(response.body[0].value);
@@ -216,7 +220,7 @@ class Clialogs implements IDialog {
 	}
 
 	function buildWindowOptionArgs(?options:WindowOptions) {
-		return [].concat(writeArgument(options, 'icon-path', 'windowIcon'));
+		return writeArgument(options, 'icon-path', 'windowIcon');
 	}
 
 	function writeArgument(options:WindowOptions, argumentName:String, fieldName:String) {
